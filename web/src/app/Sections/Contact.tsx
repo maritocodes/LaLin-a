@@ -1,29 +1,70 @@
+"use client";
+
+import { motion, type Variants } from "framer-motion";
+
 const Contact = () => {
+  // Animación del contenedor principal
+  const containerVariants: Variants = {
+    hidden: { opacity: 0, y: 50 }, // Empieza 50px abajo e invisible
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.8,
+        ease: "easeOut",
+        // Esto hace que los hijos que tengan variantes se animen uno tras otro
+        staggerChildren: 0.2, 
+      },
+    },
+  };
+
+  // Animación para los elementos de dentro (hijos)
+  const itemVariants: Variants = {
+    hidden: { opacity: 0, y: 20 }, // Los hijos suben un poquito menos para un efecto más sutil
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5, ease: "easeOut" },
+    },
+  };
+
   return (
-    <section id="contact" className="flex items-end justify-center my-32 gap-12">
-      <img
+    <motion.section
+      id="contact"
+      className="flex items-end justify-center my-32 gap-12"
+      variants={containerVariants}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.2 }} // Se activa cuando asoma un 20% en pantalla
+    >
+      {/* Logotipo */}
+      <motion.img
+        variants={itemVariants}
         src="/logotipo_escuchalo.svg"
         alt="logotipo la liña escuchalo como quieras"
       />
 
       <div className="text-primary flex flex-col gap-4">
         <div className="flex flex-col gap-1">
-          <div className="inline-flex gap-2 items-center">
+          {/* Email */}
+          <motion.div variants={itemVariants} className="inline-flex gap-2 items-center">
             <img
               className="h-2/3 translate-y-0.5"
               src="/email.svg"
               alt="email"
             />
             <p className="bonito text-xl">info@laliña.es</p>
-          </div>
+          </motion.div>
 
-          <div className="inline-flex gap-2 items-center">
+          {/* Redes / Msg */}
+          <motion.div variants={itemVariants} className="inline-flex gap-2 items-center">
             <img className="h-2/3 translate-y-0.5" src="/msg.svg" alt="msg" />
             <p className="bonito text-xl">@lavoznomada</p>
-          </div>
+          </motion.div>
         </div>
 
-        <div className="inline-flex justify-between w-full">
+        {/* Bloque de Podcasts */}
+        <motion.div variants={itemVariants} className="inline-flex justify-between w-full">
           <a>
             <img src="/apple-podcast.svg" alt="Apple Podcast" />
           </a>
@@ -33,9 +74,9 @@ const Contact = () => {
           <a>
             <img src="/youtube.svg" alt="YouTube" />
           </a>
-        </div>
+        </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 };
 

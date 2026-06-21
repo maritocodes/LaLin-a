@@ -54,7 +54,11 @@ const Header = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsAtHightlight(window.scrollY >= 2400);
+      const highlightEl = document.getElementById("highlight");
+      if (highlightEl) {
+        const top = highlightEl.getBoundingClientRect().top + window.scrollY - 100;
+        setIsAtHightlight(window.scrollY >= top);
+      }
     };
 
     handleScroll();
