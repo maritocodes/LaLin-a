@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "Cassey";
+  /* Provide multiple formats and fallbacks. Ensure the actual files exist in the /fonts/ directory. */
+  src: local("Cassey"),
+       url("/fonts/casseyfon.woff2") format("woff2"),
+       url("/fonts/casseyfon.woff") format("woff"),
+       url("/fonts/casseyfon.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: #2567e8;
+  --color-secondary: #e3e16a;
+  --color-accent: #eb1d1d;
+  --font-montserrat: "Montserrat", sans-serif;
+  --font-courier-prime: "Courier Prime", monospace;
+  --font-playfair: "Playfair Display", serif;
+  --font-cassey: "Cassey", sans-serif;
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+button {
+  @apply cursor-pointer hover:brightness-125 transition-all hover:scale-105 duration-300
+  active:brightness-90 active:scale-95;
+}
+
+.bonito {
+ @apply lowercase font-playfair italic font-bold tracking-tight;
+}
+
+.gordo {
+  @apply uppercase font-montserrat italic font-bold;
+}
+
+.header-button,
+.header-button-bg {
+  @apply uppercase text-secondary font-medium
+}
+
+.header-button-bg {
+  @apply text-primary bg-secondary rounded-full px-4 py-1
+}
