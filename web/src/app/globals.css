@@ -23,6 +23,7 @@
   --color-primary: #2567e8;
   --color-secondary: #e3e16a;
   --color-accent: #eb1d1d;
+  --bg-voces: url("/red_glitter.webp");
   --font-montserrat: "Montserrat", sans-serif;
   --font-courier-prime: "Courier Prime", monospace;
   --font-playfair: "Playfair Display", serif;
@@ -57,4 +58,11 @@ button {
 
 .header-button-bg {
   @apply text-primary bg-secondary rounded-full px-4 py-1
+}
+
+.bg-voces {
+  background-image: var(--bg-voces);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }

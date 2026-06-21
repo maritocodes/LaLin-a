@@ -15,6 +15,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "La Liña",
   description: "La voz nómada de Canarias - Podcast canario",
+  icons: {
+    icon: "/favicon.png"
+  }
 };
 
 export default function RootLayout({
