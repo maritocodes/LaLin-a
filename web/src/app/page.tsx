@@ -4,16 +4,22 @@ import Voces from "./Sections/Voces"
 import Highlight from "./Sections/Highlight"
 import Contact from "./Sections/Contact"
 import Header from "./Components/Header"
+import { getMedia } from "@/lib/media";
+import ExitAdminButton from "./Components/admin/ExitAdminButton";
 
-export default function Home() {
+export default async function Home() {
+  const media = await getMedia()
+
   return (
     <div>
       <Header />
-      <Hero />
+      <Hero mediaData={media} />
       <About />
-      <Voces />
-      <Highlight day={18} month={7} title="LA VIDA EN TRÁNSITO" />
+      <Voces mediaData={media} />
+      <Highlight mediaData={media} />
       <Contact />
+
+      <ExitAdminButton />
     </div>
   );
 }

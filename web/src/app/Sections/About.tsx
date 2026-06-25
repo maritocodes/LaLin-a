@@ -2,6 +2,8 @@
 
 import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
+// Asegúrate de que esta ruta apunte correctamente a tu nuevo componente
+import EditableMedia from "../Components/admin/EditableMedia";
 
 // --- COMPONENTE PARA EL TEXTO (OPACIDAD + BLUR) ---
 function TextBlock({
@@ -16,61 +18,76 @@ function TextBlock({
     offset: ["start end", "end start"],
   });
 
-  const opacity = useTransform(
-    scrollYProgress,
-    [0, 0.45, 0.55, 1],
-    [0.3, 1, 1, 0.3],
-  );
-  const blurValue = useTransform(
-    scrollYProgress,
-    [0, 0.45, 0.55, 1],
-    [10, 0, 0, 10],
-  );
+  const opacity = useTransform(scrollYProgress, [0, 0.45, 0.55, 1], [0.3, 1, 1, 0.3]);
+  const blurValue = useTransform(scrollYProgress, [0, 0.45, 0.55, 1], [10, 0, 0, 10]);
   const filter = useTransform(blurValue, (v) => `blur(${v}px)`);
 
   return (
-    <motion.div style={{ opacity, filter }} className="flex flex-col">
+    <motion.div style={{ opacity, filter }} className="flex flex-col z-10 relative">
       {children}
     </motion.div>
   );
 }
 
-// --- COMPONENTE PARA LA IMAGEN (OPACIDAD + BRIGHTNESS) ---
-function ImageBlock({
-  src,
+// --- ENVOLTORIO ANIMADO PARA EDITABLE MEDIA ---
+function AnimatedMediaBlock({
+  uploadType,
+  initialSrc,
   className,
   targetRef,
+  initialPosX,
+  initialPosY,
+  initialZoom,
+  initialBrightness,
 }: {
-  src: string;
+  uploadType: string;
+  initialSrc: string;
   className: string;
   targetRef: React.RefObject<HTMLDivElement | null>;
+  initialPosX?: number;
+  initialPosY?: number;
+  initialZoom?: number;
+  initialBrightness?: number;
 }) {
+  // Animaciones de Scroll (Aparecen al hacer scroll)
   const { scrollYProgress } = useScroll({
     target: targetRef,
     offset: ["start end", "end start"],
   });
-
-  // La opacidad acompaña al brillo para un efecto más suave
-  const opacity = useTransform(
-    scrollYProgress,
-    [0, 0.45, 0.55, 1],
-    [0.2, 1, 1, 0.2],
-  );
-  // El brillo pasa de 0.3 (oscuro) a 1 (normal) y vuelve a 0.3 al salir
-  const brightness = useTransform(
-    scrollYProgress,
-    [0, 0.45, 0.55, 1],
-    [0.2, 1, 1, 0.2],
-  );
-  const filter = useTransform(brightness, (v) => `brightness(${v})`);
+  const scrollOpacity = useTransform(scrollYProgress, [0, 0.45, 0.55, 1], [0.2, 1, 1, 0.2]);
+  const scrollBrightness = useTransform(scrollYProgress, [0, 0.45, 0.55, 1], [0.2, 1, 1, 0.2]);
+  const scrollFilter = useTransform(scrollBrightness, (v) => `brightness(${v})`);
 
   return (
-    <motion.img src={src} className={className} style={{ opacity, filter }} />
+    // Este motion.div maneja el fade-in y el brillo por scroll
+    <motion.div
+      className={`rounded-sm shadow-xl ${className}`}
+      style={{ opacity: scrollOpacity, filter: scrollFilter }}
+    >
+      {/* Aquí inyectamos el componente genérico con todas sus herramientas */}
+      <EditableMedia
+        uploadType={uploadType}
+        initialSrc={initialSrc}
+        initialPosX={initialPosX}
+        initialPosY={initialPosY}
+        initialZoom={initialZoom}
+        initialBrightness={initialBrightness}
+        className="w-full h-full aspect-[3/4]" // Le pasamos el aspect-ratio para que respete el formato vertical
+      />
+    </motion.div>
   );
 }
 
 // --- COMPONENTE PRINCIPAL ---
-export default function About() {
+export default function About({
+  initialLeftImg = "/gin_xmas.jfif", leftX = 50, leftY = 50, leftZoom = 1, leftBrightness = 1,
+  initialMidImg = "/gin_xmas.jfif", midX = 50, midY = 50, midZoom = 1, midBrightness = 1,
+  initialRightImg = "/gin_xmas.jfif", rightX = 50, rightY = 50, rightZoom = 1, rightBrightness = 1,
+}: {
+  initialLeftImg?: string; leftX?: number; leftY?: number; leftZoom?: number; leftBrightness?: number;
+  initialMidImg?: string; midX?: number; midY?: number; midZoom?: number; midBrightness?: number;
+  initialRightImg?: string; rightX?: number; rightY?: number; rightZoom?: number; rightBrightness?: number;
+}) {
   const left = useRef<HTMLDivElement | null>(null);
   const mid = useRef<HTMLDivElement | null>(null);
   const right = useRef<HTMLDivElement | null>(null);
@@ -78,50 +95,40 @@ export default function About() {
   return (
     <section className="w-full text-primary">
       {/* LEFT */}
-      <div
-        ref={left}
-        className="h-screen flex items-center justify-start px-20 gap-4"
-      >
-        <ImageBlock src="/gin_xmas.jfif" className="w-104" targetRef={left} />
-
+      <div ref={left} className="h-screen flex items-center justify-start px-20 gap-4 relative">
+        <AnimatedMediaBlock
+          initialSrc={initialLeftImg} uploadType="aboutLeftImage" className="w-104" targetRef={left}
+          initialPosX={leftX} initialPosY={leftY} initialZoom={leftZoom} initialBrightness={leftBrightness}
+        />
         <TextBlock targetRef={left}>
-          <p className="bonito text-3xl whitespace-nowrap">
-            has llegado a un espacio de
-          </p>
-          <p className="gordo text-4xl">
-            escucha <br /> reflexión <br /> y diálogo
-          </p>
+          <p className="bonito text-3xl whitespace-nowrap">has llegado a un espacio de</p>
+          <p className="gordo text-4xl">escucha <br /> reflexión <br /> y diálogo</p>
         </TextBlock>
       </div>
 
       {/* MIDDLE */}
-      <div
-        ref={mid}
-        className="h-screen flex items-center justify-center gap-4"
-      >
+      <div ref={mid} className="h-screen flex items-center justify-center gap-4 relative">
         <TextBlock targetRef={mid}>
-          <p className="bonito text-3xl whitespace-nowrap text-right">
-            donde distintos <br /> roces comparten
-          </p>
-          <p className="gordo text-4xl text-right">
-            experiencias <br /> miradas <br /> y preguntas
-          </p>
+          <p className="bonito text-3xl whitespace-nowrap text-right">donde distintos <br /> roces comparten</p>
+          <p className="gordo text-4xl text-right">experiencias <br /> miradas <br /> y preguntas</p>
         </TextBlock>
-
-        <ImageBlock src="/gin_xmas.jfif" className="w-112" targetRef={mid} />
+        <AnimatedMediaBlock
+          initialSrc={initialMidImg} uploadType="aboutMidImage" className="w-112" targetRef={mid}
+          initialPosX={midX} initialPosY={midY} initialZoom={midZoom} initialBrightness={midBrightness}
+        />
       </div>
 
       {/* RIGHT */}
-      <div ref={right} className="h-screen flex items-center justify-end px-20">
+      <div ref={right} className="h-screen flex items-center justify-end px-20 relative">
         <div className="text-right flex flex-col items-end">
-          <ImageBlock src="/gin_xmas.jfif" className="w-96" targetRef={right} />
-
+          <AnimatedMediaBlock
+            initialSrc={initialRightImg} uploadType="aboutRightImage" className="w-96" targetRef={right}
+            initialPosX={rightX} initialPosY={rightY} initialZoom={rightZoom} initialBrightness={rightBrightness}
+          />
           <TextBlock targetRef={right}>
             <p className="bonito text-3xl">sobre el</p>
             <p className="gordo text-4xl">presente</p>
-            <p className="bonito text-3xl">
-              que estamos viviendo <br /> y de dónde partimos
-            </p>
+            <p className="bonito text-3xl">que estamos viviendo <br /> y de dónde partimos</p>
           </TextBlock>
         </div>
       </div>

@@ -50,7 +50,7 @@ const Header = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const [isAtHighlight, setIsAtHightlight] = useState(true);
+  const [isAtHighlight, setIsAtHightlight] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {

@@ -38,7 +38,8 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-button {
+button:not(:disabled),
+.button:not(:disabled) {
   @apply cursor-pointer hover:brightness-125 transition-all hover:scale-105 duration-300
   active:brightness-90 active:scale-95;
 }
